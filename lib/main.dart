@@ -1,30 +1,49 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
+import 'package:gallery/components/product_add_view.dart';
+import 'package:gallery/services/image_service.dart';
+import 'package:gallery/services/product_service.dart';
+import 'package:gallery/views/home_view.dart';
+import 'package:gallery/views/register_view.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'services/auth_service.dart';
+import 'views/login_view.dart';
+import 'firebase_options.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  final firstCamera = cameras.first;
-  runApp(MyApp(camera: firstCamera));
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // Necesario si usas Flutter 3+
+  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final CameraDescription camera;
-
-  MyApp({required this.camera});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Galería de Fotos',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        Provider<AuthService>(create: (_) => AuthService()),
+        Provider<ProductService>(create: (_) => ProductService()),
+        Provider<ImageService>(create: (_) => ImageService()), 
+      ],
+      child: MaterialApp(
+        title: 'Tienda Virtual',
+        initialRoute: '/login',
+        // En el MaterialApp:
+routes: {
+  '/login': (context) => const LoginView(),
+  '/register': (context) => const RegisterView(),
+  '/home': (context) => const HomeView(),
+  '/add-product': (context) => const AddProductView(),
+},
       ),
-      home: GalleryScreen(camera: camera),
     );
   }
 }
