@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:gallery/models/product.dart';
+import 'package:intl/intl.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+
 
   const ProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
+    final NumberFormat _priceFormatter = NumberFormat("#,##0", "es_ES");
+
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: ClipRRect(
@@ -30,10 +34,10 @@ class ProductCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  product.name,
+                  product.name.toLowerCase(),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -52,8 +56,7 @@ class ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  '\$${product.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
+                    '\$ ${_priceFormatter.format(product.price)}',                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.green,
