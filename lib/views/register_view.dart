@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gallery/components/Tittle_Subtitle.dart';
 import '../components/register_form.dart';
 
 class RegisterView extends StatelessWidget {
@@ -9,9 +10,13 @@ class RegisterView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Registro')),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(60.0),
         child: Column(
           children: [
+            const AuthTitle(
+              mainTitle: 'Bienvenido a Store',
+              subtitle: 'Registrate para continuar',
+            ),
             const RegisterForm(),
             TextButton(
               onPressed: () => Navigator.pop(context),

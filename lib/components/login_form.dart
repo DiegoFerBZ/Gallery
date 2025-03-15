@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gallery/components/button_generic.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 
@@ -18,19 +19,20 @@ class _LoginFormState extends State<LoginForm> {
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-      
+
       final auth = Provider.of<AuthService>(context, listen: false);
       final user = await auth.signInWithEmail(
         _emailController.text.trim(),
-        _passwordController.text.trim()
+        _passwordController.text.trim(),
       );
 
       setState(() => _isLoading = false);
-      
+
       if (user == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error en las credenciales'))
+          const SnackBar(content: Text('Error en las credenciales')),
         );
+        return;
       }
 
       Navigator.of(context).pushReplacementNamed('/home');
@@ -46,22 +48,24 @@ class _LoginFormState extends State<LoginForm> {
           TextFormField(
             controller: _emailController,
             decoration: const InputDecoration(labelText: 'Email'),
-            validator: (value) => value!.contains('@') ? null : 'Email inválido',
+            validator:
+                (value) => value!.contains('@') ? null : 'Email inválido',
             keyboardType: TextInputType.emailAddress,
           ),
           TextFormField(
             controller: _passwordController,
             decoration: const InputDecoration(labelText: 'Contraseña'),
-            validator: (value) => value!.length >= 6 ? null : 'Mínimo 6 caracteres',
+            validator:
+                (value) => value!.length >= 6 ? null : 'Mínimo 6 caracteres',
             obscureText: true,
           ),
           const SizedBox(height: 20),
           _isLoading
               ? const CircularProgressIndicator()
-              : ElevatedButton(
-                  onPressed: _submit,
-                  child: const Text('Iniciar Sesión'),
-                ),
+              : GenericButton(
+                text: 'Iniciar Sesión',
+                onPressed: () => _submit(),
+              ),
         ],
       ),
     );
