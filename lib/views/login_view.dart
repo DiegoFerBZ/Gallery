@@ -9,10 +9,11 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(60.0),
-        child: Column(
-          children: [
+      body: SafeArea(
+        child: SingleChildScrollView( // Permite desplazamiento
+          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          child: Column(
+            children: [
             const AuthTitle(
               mainTitle: 'Bienvenido a Store',
               subtitle: 'Inicia sesión para continuar',
@@ -28,6 +29,6 @@ class LoginView extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }

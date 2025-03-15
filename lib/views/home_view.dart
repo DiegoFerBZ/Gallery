@@ -1,18 +1,48 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery/components/products_grid.dart';
 import 'package:gallery/models/product.dart';
+import 'package:gallery/services/auth_service.dart';
 import 'package:gallery/services/product_service.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatelessWidget {
+
+
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+  final AuthService _authService = AuthService();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inicio'),
-
+        title: StreamBuilder<User?>(
+          stream: _authService.authStateChanges,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              final User? user = snapshot.data;
+              return Text('Bienvenido ${user?.email ?? "Invitado"}');
+            }
+            return const Text('Cargando...');
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              // Cerrar sesión
+              await _authService.signOut();
+              
+              // Navegar a login y limpiar el stack de navegación
+              Navigator.pushNamedAndRemoveUntil(
+                context, 
+                '/login', 
+                (route) => false
+              );
+            },
+            tooltip: 'Cerrar sesión',
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, '/add-product'),
